@@ -1,0 +1,40 @@
+{
+  "expo": {
+    "name": "HomeTally",
+    "slug": "hometally",
+    "scheme": "hometally",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "dev.hometally.app"
+    },
+    "android": {
+      "package": "dev.hometally.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#E3F1EE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "react-native-fast-tflite",
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "HomeTally uses the camera to photograph receipts. Photos are read on your phone and never uploaded.",
+          "photosPermission": "HomeTally can read a receipt photo you already took. It is processed on your phone and never uploaded."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

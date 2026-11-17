@@ -1,0 +1,331 @@
+{
+  "task": "receipt text → spending category",
+  "input": {
+    "name": "features",
+    "shape": [
+      1,
+      4096
+    ],
+    "dtype": "float32",
+    "pipeline": "hometally_model/features.py ≡ app/src/lib/features.ts"
+  },
+  "output": {
+    "name": "probabilities",
+    "shape": [
+      1,
+      10
+    ],
+    "labels": "labels.json"
+  },
+  "architecture": "Dropout(0.2) → Dense(64, relu) → Dropout(0.3) → Dense(10, softmax)",
+  "quantisation": "dynamic range (int8 weights)",
+  "size_bytes": 267640,
+  "data": {
+    "source": "synthetic OCR'd receipts (synth.py)",
+    "evaluation": {
+      "train": 15000,
+      "test": 3000,
+      "split": "by merchant and by item: test receipts use shops and products unseen in training",
+      "test_merchants": {
+        "groceries": [
+          "Epicerie Al Baraka",
+          "مخبزة الأمل",
+          "Supeco",
+          "Atacadao"
+        ],
+        "restaurants": [
+          "Pizzeria Venezia",
+          "مقهى النخيل",
+          "Sushi Box",
+          "Restaurant Dar Tajine"
+        ],
+        "transport": [
+          "ONCF",
+          "Afriquia",
+          "Al Boraq",
+          "Supratours"
+        ],
+        "utilities": [
+          "RADEEMA",
+          "ONEE Branche Eau"
+        ],
+        "telecom": [
+          "Boutique inwi",
+          "Orange"
+        ],
+        "health": [
+          "Clinique Al Farabi",
+          "صيدلية الشفاء"
+        ],
+        "clothing": [
+          "ملابس النجمة",
+          "Marwa",
+          "Bata"
+        ],
+        "household": [
+          "Quincaillerie Atlas",
+          "Biougnach",
+          "Home Center"
+        ],
+        "education": [
+          "Ecole Al Massira",
+          "Centre de Langues"
+        ],
+        "leisure": [
+          "حمام النصر",
+          "Bowling Morocco Mall",
+          "Aquaparc"
+        ]
+      },
+      "test_items": {
+        "groceries": [
+          "Fromage La vache qui rit",
+          "Oignons kg",
+          "Pain",
+          "Yaourt Jaouda",
+          "Pommes de terre kg",
+          "خبز"
+        ],
+        "restaurants": [
+          "Coca 33cl",
+          "أتاي",
+          "Couscous",
+          "Jus d'orange",
+          "Panini thon"
+        ],
+        "transport": [
+          "Pompe 04",
+          "Parking 2h",
+          "تذكرة",
+          "Lavage auto"
+        ],
+        "utilities": [
+          "Taxe audiovisuelle",
+          "Redevance fixe",
+          "الكهرباء",
+          "Electricite"
+        ],
+        "telecom": [
+          "Fibre optique",
+          "Go data",
+          "Recharge *3",
+          "تعبئة"
+        ],
+        "health": [
+          "دواء",
+          "Masques",
+          "Ordonnance",
+          "Pansements"
+        ],
+        "clothing": [
+          "T-shirt",
+          "Echarpe",
+          "Jean slim",
+          "Djellaba"
+        ],
+        "household": [
+          "Machine a laver",
+          "Lampe",
+          "Poubelle",
+          "Tapis"
+        ],
+        "education": [
+          "Frais de scolarite",
+          "Classeur",
+          "Inscription",
+          "Frais d'examen"
+        ],
+        "leisure": [
+          "Partie bowling",
+          "Coaching",
+          "Entree hammam",
+          "Entree enfant"
+        ]
+      }
+    },
+    "shipped_model": {
+      "train": 15000,
+      "vocabulary": "all merchants and items"
+    }
+  },
+  "metrics": {
+    "note": "from the evaluation run; the shipped model is retrained on the full vocabulary",
+    "keras_accuracy": 0.7137,
+    "tflite_accuracy": 0.713,
+    "per_class": {
+      "groceries": {
+        "precision": 0.782,
+        "recall": 0.74,
+        "f1": 0.76
+      },
+      "restaurants": {
+        "precision": 0.613,
+        "recall": 0.65,
+        "f1": 0.631
+      },
+      "transport": {
+        "precision": 0.816,
+        "recall": 0.857,
+        "f1": 0.836
+      },
+      "utilities": {
+        "precision": 0.656,
+        "recall": 0.793,
+        "f1": 0.718
+      },
+      "telecom": {
+        "precision": 0.643,
+        "recall": 0.987,
+        "f1": 0.779
+      },
+      "health": {
+        "precision": 0.696,
+        "recall": 0.32,
+        "f1": 0.438
+      },
+      "clothing": {
+        "precision": 0.611,
+        "recall": 0.58,
+        "f1": 0.595
+      },
+      "household": {
+        "precision": 0.669,
+        "recall": 0.6,
+        "f1": 0.633
+      },
+      "education": {
+        "precision": 0.976,
+        "recall": 0.797,
+        "f1": 0.877
+      },
+      "leisure": {
+        "precision": 0.749,
+        "recall": 0.807,
+        "f1": 0.777
+      }
+    },
+    "confusion": [
+      [
+        222,
+        17,
+        13,
+        3,
+        3,
+        2,
+        16,
+        2,
+        1,
+        21
+      ],
+      [
+        1,
+        195,
+        1,
+        12,
+        79,
+        1,
+        7,
+        0,
+        0,
+        4
+      ],
+      [
+        1,
+        1,
+        257,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        40
+      ],
+      [
+        0,
+        3,
+        1,
+        238,
+        0,
+        0,
+        1,
+        57,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        296,
+        0,
+        2,
+        0,
+        0,
+        2
+      ],
+      [
+        0,
+        42,
+        3,
+        89,
+        15,
+        96,
+        36,
+        1,
+        5,
+        13
+      ],
+      [
+        48,
+        3,
+        9,
+        0,
+        66,
+        0,
+        174,
+        0,
+        0,
+        0
+      ],
+      [
+        2,
+        51,
+        4,
+        0,
+        1,
+        26,
+        35,
+        180,
+        0,
+        1
+      ],
+      [
+        0,
+        2,
+        11,
+        7,
+        0,
+        12,
+        0,
+        29,
+        239,
+        0
+      ],
+      [
+        10,
+        4,
+        16,
+        14,
+        0,
+        1,
+        13,
+        0,
+        0,
+        242
+      ]
+    ]
+  },
+  "caveat": "Scores are on synthetic data. Expect lower accuracy on real receipts; the app lets users correct the category and keeps the corrected text for future retraining."
+}

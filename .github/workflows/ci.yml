@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  model:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: model } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync
+      - run: uv run pytest -q
+
+  app:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: app } }
+    env:
+      EXPO_PUBLIC_CONVEX_URL: https://example.convex.cloud   # bundling only; nothing connects
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 24, cache: npm, cache-dependency-path: app/package-lock.json }
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test                     # feature parity with Python, receipt parsing, Convex functions
+      - run: npx expo-doctor
+      - run: npx expo export --platform android --output-dir dist   # JS bundle + model asset
