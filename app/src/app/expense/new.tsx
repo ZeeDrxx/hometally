@@ -8,7 +8,7 @@ import { categoryInfo, type CategoryId } from "../../../convex/categories";
 import { Body, Button, Card, CategoryPicker, Field, Muted } from "../../components/ui";
 import type { Prediction } from "../../lib/classifier";
 import { parseUserAmount } from "../../lib/receipt";
-import { scanReceipt, useReceiptModel } from "../../lib/scan";
+import { SCAN_SUPPORTED, scanReceipt, useReceiptModel } from "../../lib/scan";
 import { useToken } from "../../lib/session";
 
 export default function NewExpense() {
@@ -78,11 +78,17 @@ export default function NewExpense() {
 
   return (
     <ScrollView contentContainerStyle={{ padding: 16 }} keyboardShouldPersistTaps="handled">
-      <View style={{ flexDirection: "row", gap: 8 }}>
-        <View style={{ flex: 1 }}><Button title="📷 Camera" kind="secondary" busy={scanning} disabled={!model} onPress={() => doScan("camera")} /></View>
-        <View style={{ flex: 1 }}><Button title="🖼️ Photo" kind="secondary" busy={scanning} disabled={!model} onPress={() => doScan("library")} /></View>
-      </View>
-      {!model && <Muted>Loading the receipt model…</Muted>}
+      {SCAN_SUPPORTED ? (
+        <>
+          <View style={{ flexDirection: "row", gap: 8 }}>
+            <View style={{ flex: 1 }}><Button title="📷 Camera" kind="secondary" busy={scanning} disabled={!model} onPress={() => doScan("camera")} /></View>
+            <View style={{ flex: 1 }}><Button title="🖼️ Photo" kind="secondary" busy={scanning} disabled={!model} onPress={() => doScan("library")} /></View>
+          </View>
+          {!model && <Muted>Loading the receipt model…</Muted>}
+        </>
+      ) : (
+        <Card><Muted>Receipt scanning runs on the phone (on-device OCR and model). Here, add the expense by hand.</Muted></Card>
+      )}
 
       {prediction && (
         <Card>

@@ -12,6 +12,8 @@ import { useTensorflowModel } from "react-native-fast-tflite";
 import { classify, type Prediction } from "./classifier";
 import { extractDate, extractMerchant, extractTotalCents } from "./receipt";
 
+export const SCAN_SUPPORTED = true;
+
 export type ScanResult = {
   text: string;
   totalCents: number | null;

@@ -28,3 +28,4 @@ jobs:
       - run: npm test                     # feature parity with Python, receipt parsing, Convex functions
       - run: npx expo-doctor
       - run: npx expo export --platform android --output-dir dist   # JS bundle + model asset
+      - run: npx expo export --platform web --output-dir dist-web   # browser demo build (no scanning)

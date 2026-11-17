@@ -65,7 +65,7 @@ TypeScript output against it bucket for bucket, including Arabic text.
 
 - **No Arabic OCR from photos.** ML Kit's on-device recogniser covers Latin, Chinese, Devanagari, Japanese and Korean scripts, but not Arabic. French lines, totals and prices on Moroccan receipts are read; Arabic-only lines are not. The classifier itself understands Arabic text.
 - **Device-token sessions instead of accounts.** Joining needs the 8-character invite code (31⁸ ≈ 850 billion combinations). Moving to Convex Auth with phone sign-in is the natural next step.
-- **A development build is required.** OCR and TFLite are native modules, so the app runs in a [development build](https://docs.expo.dev/develop/development-builds/introduction/), not in Expo Go.
+- **A development build is required for scanning.** OCR and TFLite are native modules, so the full app runs in a [development build](https://docs.expo.dev/develop/development-builds/introduction/), not in Expo Go. The web build (below) has no scanning.
 
 ## Run it
 
@@ -78,6 +78,18 @@ npx convex dev                     # keep it running
 # 2. App: build and install the development client (Android Studio or Xcode required)
 npx expo run:android               # or: npx expo run:ios
 ```
+
+**In a browser, without Android Studio:** keep `npx convex dev` running, then
+
+```bash
+npm run web                        # http://localhost:8081
+```
+
+The web build is the same app (households, live totals, budgets, manual expenses) with receipt
+scanning switched off. Platform files supply the web stand-ins: `scan.web.ts` replaces the OCR and
+TFLite pipeline, and `token-store.web.ts` keeps the device token in `localStorage`, since a browser
+has no keychain. Open it in two browsers, join the same household with the invite code, and watch
+an expense added in one appear in the other.
 
 To test on a physical phone on your Wi-Fi, set `EXPO_PUBLIC_CONVEX_URL` in `app/.env.local` to your
 computer's LAN address. For a hosted backend, run `npx convex login` and `npx convex deploy`, then point

@@ -7,6 +7,7 @@ import { api } from "../../convex/_generated/api";
 import { categoryInfo } from "../../convex/categories";
 import { Body, BudgetBar, Button, Card, Field, Muted, Screen, Title, usePalette } from "../components/ui";
 import { formatMAD, monthRange } from "../lib/receipt";
+import { SCAN_SUPPORTED } from "../lib/scan";
 import { useToken } from "../lib/session";
 
 export default function Home() {
@@ -81,8 +82,10 @@ function Dashboard() {
             <Title>{summary ? formatMAD(summary.totalCents) : "…"}</Title>
             {summary && summary.budgetCents > 0 && <BudgetBar spent={summary.totalCents} budget={summary.budgetCents} />}
             <View style={{ flexDirection: "row", gap: 8, marginVertical: 12 }}>
-              <View style={{ flex: 1 }}><Button title="📷 Scan receipt" onPress={() => router.push({ pathname: "/expense/new", params: { scan: "1" } })} /></View>
-              <View style={{ flex: 1 }}><Button title="Add manually" kind="secondary" onPress={() => router.push("/expense/new")} /></View>
+              {SCAN_SUPPORTED && (
+                <View style={{ flex: 1 }}><Button title="📷 Scan receipt" onPress={() => router.push({ pathname: "/expense/new", params: { scan: "1" } })} /></View>
+              )}
+              <View style={{ flex: 1 }}><Button title="Add manually" kind={SCAN_SUPPORTED ? "secondary" : "primary"} onPress={() => router.push("/expense/new")} /></View>
             </View>
             {summary?.byCategory.map((row) => {
               const info = categoryInfo(row.category);

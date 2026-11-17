@@ -4,17 +4,18 @@
  * session, not the household: another member can share the invite code again.
  */
 import * as Crypto from "expo-crypto";
-import * as SecureStore from "expo-secure-store";
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+
+import { getToken, setToken } from "./token-store";
 
 const KEY = "hometally.token";
 
 async function loadOrCreateToken(): Promise<string> {
-  const existing = await SecureStore.getItemAsync(KEY);
+  const existing = await getToken(KEY);
   if (existing) return existing;
   const bytes = Crypto.getRandomBytes(32);
   const token = Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
-  await SecureStore.setItemAsync(KEY, token);
+  await setToken(KEY, token);
   return token;
 }
 
